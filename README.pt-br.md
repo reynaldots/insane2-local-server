@@ -96,13 +96,27 @@ Hospedar conta: não precisa ser cliente. Detalhes em [docs/achievements.md](doc
 sys.concmd("exec host_bots.cfg")
 ```
 
-Depois deixe **Bots: Allowed** no lobby e inicie com `sys.concmd("iniciar")`.
+Depois deixe **Bots: Allowed** no lobby e inicie com `sys.concmd("start")`.
 
-**Rota de farm:** com o servidor no ar, `sys.concmd("rota_01")` ... `sys.concmd("rota_20")`
-trocam modo + mapa e carregam a corrida. As rotas 01-10 cobrem os 10 modos (Love of Diversity)
-e 01-20 cobrem os 20 mapas (I know the Route). Use sempre o mesmo carro para "Very good Car".
-Veja o progresso a qualquer momento com `sys.concmd("progresso")`.
-Se alguma rota não carregar (ou um mapa não aceitar o modo), escolha mapa/modo no lobby e use
+**Rota de farm, em palavras simples.** Dois achievements pedem uma vitória em cada modo e uma
+vitória em cada mapa. Fazer isso na mão significa abrir o lobby 20 vezes e mudar as opções.
+`route_01` até `route_20` fazem essa configuração por você. Cada uma é uma corrida curta:
+
+1. Escolhe um modo e coloca o menor número de voltas ou pontos que o jogo aceita, para a
+   corrida acabar o quanto antes.
+2. Carrega um mapa.
+3. Você corre e termina em primeiro.
+
+`route_01` até `route_10` usam um modo diferente cada, então 10 vitórias dão "Love of Diversity".
+`route_01` até `route_20` juntas passam pelos 20 mapas, então 20 vitórias dão "I know the Route".
+Essas 20 vitórias também contam para "Step to Fame" (25): vença mais 5, e use o mesmo carro o
+tempo todo para "Very good Car" (10 vitórias no mesmo carro). `sys.concmd("progress")` mostra
+o que você já tem.
+
+Exemplo: `sys.concmd("route_01")` significa "Offroad Race, 2 voltas, mapa us1, carregar agora".
+
+O comando `map` automático dentro de uma rota não foi confirmado em todas as situações. Se uma
+rota não carregar, ou um mapa recusar o modo, escolha mapa e modo no lobby e inicie com
 `UI.MpServerLobbyWnd:StartMpGame()`, que é o caminho confirmado nos testes.
 
 ## "Bots are harder" com 8 cópias
@@ -173,17 +187,15 @@ O console do jogo executa **Lua**. Comandos de console e os atalhos abaixo são 
 
 | Digitado no console (F11) | O que faz |
 |---|---|
-| `UI.MpServerLobbyWnd:StartMpGame()` | Inicia a partida do lobby sozinho (igual a `sys.concmd("iniciar")`) |
-| `sys.concmd("exec host_bots.cfg")` / `sys.concmd("servidor")` | Servidor sem Steam (`sv_start`) com bots, abre o lobby |
+| `UI.MpServerLobbyWnd:StartMpGame()` | Inicia a partida do lobby sozinho (igual a `sys.concmd("start")`) |
+| `sys.concmd("exec host_bots.cfg")` / `sys.concmd("server")` | Servidor sem Steam (`sv_start`) com bots, abre o lobby |
 | `sys.concmd("connect 127.0.0.1")` | Entra no servidor deste PC (cópias extras) |
-| `sys.concmd("rota_01")` ... `sys.concmd("rota_20")` | Rota de farm: modo + mapa, carrega a corrida |
-| `sys.concmd("modo_corrida")`, `modo_knockout`, `modo_pathfinder`, `modo_gatehunt`, `modo_markgate`, `modo_jamboree`, `modo_capture`, `modo_return`, `modo_chase`, `modo_greed` | Define um modo com o mínimo de pontos/voltas |
-| `sys.concmd("mapa_us1")` ... `mapa_aq5` | Carrega um mapa no servidor |
-| `sys.concmd("progresso")` | Mostra vitórias, tempo, modos e mapas já vencidos |
-| `sys.concmd("parar")` | Para o servidor |
+| `sys.concmd("route_01")` ... `sys.concmd("route_20")` | Uma corrida curta: define um modo e um mapa e carrega |
+| `sys.concmd("mode_race")`, `mode_knockout`, `mode_pathfinder`, `mode_gatehunt`, `mode_markgate`, `mode_jamboree`, `mode_capture`, `mode_return`, `mode_chase`, `mode_greed` | Define um modo com o mínimo de pontos ou voltas |
+| `sys.concmd("map_us1")` ... `map_aq5` | Carrega um mapa no servidor |
+| `sys.concmd("progress")` | Mostra vitórias, tempo, modos e mapas já vencidos |
+| `sys.concmd("stop")` | Para o servidor |
 | `MpStartNetLocator(); sys.concmd("findLanGames")` e depois `MpClientConnect(network.LANGames[1].address)` | Entrar pela busca de rede local em vez do IP |
-
-Os atalhos também existem em inglês: `server`, `start`, `stop`, `progress`.
 
 Arquivos instalados em `<Insane2>\data`:
 
@@ -212,15 +224,18 @@ Arquivos instalados em `<Insane2>\data`:
 
 ## Último recurso (opcional)
 
-Se não conseguir rodar 8 cópias, o `unlock_bots_are_harder.cfg` libera o **"Bots are harder"**
-exatamente como o jogo faz quando a condição é cumprida:
+Se não conseguir rodar 8 cópias, o `unlock_bots_are_harder.cfg` serve para liberar o
+**"Bots are harder"** do mesmo jeito que o jogo faz quando a condição é cumprida:
 
 ```lua
 sys.concmd("exec unlock_bots_are_harder.cfg")
 ```
 
-O comando de console original `unlockAchievement` **não** funciona no PC (é o caminho do Xbox
-360 e nunca chega à Steam). Prefira jogar: o método das 8 cópias foi testado e funciona.
+**Isso não foi testado no jogo.** Deve funcionar, porque chama `Profile:UnlockAchievement`,
+a mesma função que o jogo chama quando você ganha um achievement, e essa função envia o
+desbloqueio para a Steam e salva o perfil. O comando de console original `unlockAchievement`
+**não** funciona no PC: é o caminho do Xbox 360 e nunca chega à Steam. Prefira jogar: o método
+das 8 cópias foi testado e funciona.
 
 ## Como funciona
 

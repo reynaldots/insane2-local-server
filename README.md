@@ -98,11 +98,25 @@ sys.concmd("exec host_bots.cfg")
 
 Then set **Bots: Allowed** in the lobby and start with `sys.concmd("start")`.
 
-**Farming route:** with the server up, `sys.concmd("rota_01")` ... `sys.concmd("rota_20")`
-change mode + map and load the race. Routes 01-10 cover the 10 modes (Love of Diversity) and
-01-20 cover the 20 maps (I know the Route). Use the same car for "Very good Car".
-Check progress anytime with `sys.concmd("progress")`.
-If a route does not load (or a map does not accept a mode), pick map/mode in the lobby and use
+**Farming route, in plain words.** Two achievements ask you to win once in every mode and once
+on every map. Doing that by hand means opening the lobby 20 times and changing the settings.
+`route_01` to `route_20` do that setup for you. Each one is a single short race:
+
+1. It picks a game mode and sets it to the smallest number of laps or points the game allows,
+   so the race ends as soon as possible.
+2. It loads one map.
+3. You drive that race and finish first.
+
+`route_01` to `route_10` each use a different mode, so 10 wins give you "Love of Diversity".
+`route_01` to `route_20` together visit all 20 maps, so 20 wins give you "I know the Route".
+Those 20 wins also count toward "Step to Fame" (25): win 5 more, and keep the same car the
+whole time for "Very good Car" (10 wins on one car). `sys.concmd("progress")` shows what you
+already have.
+
+Example: `sys.concmd("route_01")` means "Offroad Race, 2 laps, map us1, load it now".
+
+The automatic `map` command inside a route was not confirmed in every situation. If a route
+does not load, or a map refuses a mode, pick the map and mode in the lobby and start with
 `UI.MpServerLobbyWnd:StartMpGame()`, which is the path confirmed in testing.
 
 ## "Bots are harder" with 8 copies
@@ -176,9 +190,9 @@ The in-game console runs **Lua**. Console commands and the shortcuts below are c
 | `UI.MpServerLobbyWnd:StartMpGame()` | Starts the lobby match alone (same as `sys.concmd("start")`) |
 | `sys.concmd("exec host_bots.cfg")` / `sys.concmd("server")` | Non-Steam server (`sv_start`) with bots, opens the lobby |
 | `sys.concmd("connect 127.0.0.1")` | Joins the server on this PC (extra copies) |
-| `sys.concmd("rota_01")` ... `sys.concmd("rota_20")` | Farming route: mode + map, loads the race |
-| `sys.concmd("modo_corrida")`, `modo_knockout`, `modo_pathfinder`, `modo_gatehunt`, `modo_markgate`, `modo_jamboree`, `modo_capture`, `modo_return`, `modo_chase`, `modo_greed` | Sets a mode with the minimum score/laps |
-| `sys.concmd("mapa_us1")` ... `mapa_aq5` | Loads a map on the server |
+| `sys.concmd("route_01")` ... `sys.concmd("route_20")` | One short race: sets a mode and a map, then loads it |
+| `sys.concmd("mode_race")`, `mode_knockout`, `mode_pathfinder`, `mode_gatehunt`, `mode_markgate`, `mode_jamboree`, `mode_capture`, `mode_return`, `mode_chase`, `mode_greed` | Sets one mode with the minimum score or laps |
+| `sys.concmd("map_us1")` ... `map_aq5` | Loads one map on the server |
 | `sys.concmd("progress")` | Prints wins, time, modes and maps already won |
 | `sys.concmd("stop")` | Stops the server |
 | `MpStartNetLocator(); sys.concmd("findLanGames")` then `MpClientConnect(network.LANGames[1].address)` | Join through LAN search instead of an IP |
@@ -210,15 +224,18 @@ Files installed in `<Insane2>\data`:
 
 ## Optional last resort
 
-If you cannot run 8 copies, `unlock_bots_are_harder.cfg` unlocks **"Bots are harder"** exactly
-the way the game does when the condition is met:
+If you cannot run 8 copies, `unlock_bots_are_harder.cfg` is meant to unlock **"Bots are harder"**
+the same way the game does when the condition is met:
 
 ```lua
 sys.concmd("exec unlock_bots_are_harder.cfg")
 ```
 
-The original `unlockAchievement` console command does **not** work on PC (it is the Xbox 360
-path and never reaches Steam). Prefer playing: the 8-copies method was tested and works.
+**This was not tested in-game.** It should work, because it calls `Profile:UnlockAchievement`,
+the same function the game calls when you earn an achievement, and that function sends the
+unlock to Steam and saves the profile. The original `unlockAchievement` console command does
+**not** work on PC: it is the Xbox 360 path and never reaches Steam. Prefer playing: the
+8-copies method was tested and works.
 
 ## How it works
 

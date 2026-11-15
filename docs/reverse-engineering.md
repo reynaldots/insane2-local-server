@@ -52,7 +52,7 @@ files it is the opposite: lines are console commands and `scriptRun '<lua>'` run
 | Menu > Multiplayer > Create server | `Steam_ServerStart(false, "mp_lobby")` | Yes: a second copy on the same account gets **"Authorization error"** (`STEAM_AUTH_FAILED = 18`) |
 | Console `sv_start [map]` (default `mp_lobby`) | Own UDP/WinSock server | No: extra copies on the same account can join with `connect 127.0.0.1` |
 
-- `sv_numBots` / `sv_maxPlayers`; the lobby option "Bots" only has `Forbidden` (0) and `Allowed` (`network.MAX_PLAYERS` = 8) and overwrites the cvar.
+- `sv_numBots` / `sv_maxPlayers`; the lobby option "Bots" only has `Forbidden` (0) and `On free slots` (`network.MAX_PLAYERS` = 8) and overwrites the cvar.
 - The lobby "Start" button requires at least one *ready* human besides the server
   (`MpServerLobbyWnd:HasReadyPlayers`). Bots are not in that table. The button then just runs
   `map '<sv_nextLevel>'`, so `UI.MpServerLobbyWnd:StartMpGame()` in the console starts the match alone.

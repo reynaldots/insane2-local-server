@@ -13,8 +13,107 @@ No game file is modified or redistributed: only `.cfg` files and PowerShell help
 
 ---
 
+## Quick run
+
+Short path to play online and to fill all 8 human slots. The rest of this file is extra detail.
+
+### 1. Prepare once
+
+1. Download this repository, open **PowerShell** in its folder and run:
+
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File .\tools\install.ps1
+   ```
+
+2. In Steam: right-click **Insane 2 > Properties > Launch Options** and type `-dev`.
+
+   ![Steam launch options with -dev](imgs/steam_dev.jpg)
+
+   *Launch options in Steam with `-dev`, so the in-game console opens on F11.*
+
+3. Start the game and press **F11**. The console must appear.
+
+### 2. Online mode with bots
+
+1. **Multiplayer > Create server**.
+2. In the lobby, change **Bots** from `Forbidden` to **On free slots** (bots fill the empty slots).
+3. Choose map, mode and laps.
+4. The **Start** button refuses to start alone. Open the console (**F11**) and type:
+
+   ```lua
+   UI.MpServerLobbyWnd:StartMpGame()
+   ```
+
+5. Win the race. "Hello!" unlocks at the start of the first match.
+
+### 3. Eight players ("Bots are harder")
+
+The game counts 8 human slots. Bots do not fill those. Use the non-Steam server: the Steam menu rejects a second copy on the same account.
+
+If the PC struggles with 8 copies, set the [light settings](#performance-light-settings-for-the-extra-copies) first.
+
+1. Open Insane 2 **from Steam** (with `-dev`). This is the main window.
+2. In the main menu, open the console (F11) and run:
+
+   ```lua
+   sys.concmd("exec host_bots.cfg")
+   ```
+
+   ![Console hosting the bot server](imgs/terminal_host_bots.png)
+
+   *Main window: `exec host_bots.cfg` starts the local server and opens the lobby.*
+
+3. Open 7 extra copies (PowerShell, in the repository folder):
+
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File .\tools\start_clients.ps1 -Clients 7
+   ```
+
+4. In **each** extra copy, when the main menu appears, press **F11** and type:
+
+   ```lua
+   sys.concmd("connect 127.0.0.1")
+   ```
+
+   The copy joins the lobby and stays **not ready**.
+
+   ![Eight windows, none ready](imgs/all.jpg)
+
+   *After connect, the copies are in the lobby and still not ready.*
+
+5. In **each** window, press **Enter** or **A** to accept and become **ready**.
+
+   ![All eight players ready](imgs/all_ready.jpg)
+
+   *All 8 players marked ready.*
+
+6. In the main window, start the race and **win it**. All 8 copies must be in the race (they can stay idle on the grid).
+
+   ![Race starting with eight players](imgs/all_start.jpg)
+
+   *The race starts with the eight copies connected.*
+
+7. When the race ends, **"Bots are harder"** shows as unlocked.
+
+   ![Achievement unlocked after the race](imgs/achievement_unlocked.jpg)
+
+   *In-game notice: the achievement unlocked at the end of the race.*
+
+8. Close the extra copies with `.\tools\start_clients.ps1 -StopAll`, then close the main window. When the game closes, Steam reports the unlock, and it shows up in the achievements list.
+
+   ![Steam popup when the game closes](imgs/achievement_unlocked2.jpg)
+
+   *Steam reports the unlock when the game is closed.*
+
+   ![Achievements on the Steam profile](imgs/achievements_on_steam.jpg)
+
+   *The achievement on the Steam achievements page.*
+
+---
+
 ## Contents
 
+- [Quick run](#quick-run)
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Online achievements](#online-achievements)
@@ -74,12 +173,20 @@ No game file is modified or redistributed: only `.cfg` files and PowerShell help
 
 Hosting counts: you do not need to be a client. Full details in [docs/achievements.md](docs/achievements.md).
 
+When an online achievement unlocks, the game shows it after the race. Steam often shows its own notice only when you close the game.
+
+![Achievement unlocked after the race](imgs/achievement_unlocked.jpg)
+
+*In-game notice: the achievement unlocked after the race.*
+
 ## Play against bots
+
+The short steps are in [Quick run](#quick-run). Extra detail below.
 
 **Option A - Steam server from the menu (simplest):**
 
 1. **Multiplayer > Create server**.
-2. In the lobby, change **Bots** from `Forbidden` to **`Allowed`** (bots fill the empty slots).
+2. In the lobby, change **Bots** from `Forbidden` to **On free slots** (bots fill the empty slots).
 3. Choose map, mode and laps.
 4. The **Start** button refuses to start alone ("There are no ready players connected...").
    Open the console (**F11**) and type:
@@ -96,7 +203,7 @@ Hosting counts: you do not need to be a client. Full details in [docs/achievemen
 sys.concmd("exec host_bots.cfg")
 ```
 
-Then set **Bots: Allowed** in the lobby and start with `sys.concmd("start")`.
+Then set **Bots: On free slots** in the lobby and start with `sys.concmd("start")`.
 
 **Farming route, in plain words.** Two achievements ask you to win once in every mode and once
 on every map. Doing that by hand means opening the lobby 20 times and changing the settings.
@@ -121,6 +228,8 @@ does not load, or a map refuses a mode, pick the map and mode in the lobby and s
 
 ## "Bots are harder" with 8 copies
 
+The short steps are in [Quick run](#quick-run). Extra detail below.
+
 The game counts the 8 human slots (bots use separate slots), so you need 8 copies of the game
 connected. It works on a single PC and a single Steam account using the **non-Steam** server:
 
@@ -144,10 +253,11 @@ connected. It works on a single PC and a single Steam account using the **non-St
    sys.concmd("connect 127.0.0.1")
    ```
 
-   and mark the copy as **ready** in the lobby.
-6. In the main window, start the race and **win it**. All 8 copies must be in the race
-   (they can stay idle on the grid).
-7. Close the extra copies with `.\tools\start_clients.ps1 -StopAll`, then close the main window.
+   The copy joins the lobby and stays **not ready**.
+6. In **each** window, press **Enter** or **A** to accept and become **ready**.
+7. In the main window, start the race and **win it**. All 8 copies must be in the race
+   (they can stay idle on the grid). When it ends, **"Bots are harder"** shows as unlocked.
+8. Close the extra copies with `.\tools\start_clients.ps1 -StopAll`, then close the main window.
 
 > Do not use the Steam server from the menu for this: Steam rejects a second copy on the same
 > account with **"Authorization error"**.
@@ -197,6 +307,12 @@ The in-game console runs **Lua**. Console commands and the shortcuts below are c
 | `sys.concmd("stop")` | Stops the server |
 | `MpStartNetLocator(); sys.concmd("findLanGames")` then `MpClientConnect(network.LANGames[1].address)` | Join through LAN search instead of an IP |
 
+`sys.concmd("progress")` prints what you already have for the online achievements:
+
+![Online progress in the console](imgs/terminal_progress.png)
+
+*Console output of `progress`: wins, time, modes and maps already done.*
+
 Files installed in `<Insane2>\data`:
 
 | File | Purpose |
@@ -214,7 +330,7 @@ Files installed in `<Insane2>\data`:
 | F11 does nothing | Missing `-dev` in Steam launch options |
 | `attempt to call global 'scriptRun' (a nil value)` | The console runs Lua: type Lua directly or use `sys.concmd("...")` |
 | "There are no ready players connected to the game except the server" | Bots do not count for the Start button: use `UI.MpServerLobbyWnd:StartMpGame()` |
-| Lobby has "Bots: Forbidden" and no bot count | That option is only Forbidden/Allowed; `Allowed` fills all empty slots |
+| Lobby has "Bots: Forbidden" and no bot count | That option is only Forbidden / On free slots; On free slots fills all empty slots |
 | Extra copy: "Authorization error" | You hosted through the Steam menu. Use `sys.concmd("exec host_bots.cfg")` |
 | Extra copy does not find the server | The server list only shows Steam servers. Use `sys.concmd("connect 127.0.0.1")` in the extra copy |
 | Automatic connect at startup does nothing | `-concmd` runs before the network is ready; connect manually from the menu |

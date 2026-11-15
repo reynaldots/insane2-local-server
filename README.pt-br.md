@@ -13,19 +13,123 @@ Nenhum arquivo do jogo é alterado ou redistribuído: só arquivos `.cfg` e scri
 
 ---
 
+## Quick run
+
+Caminho curto para jogar online e para preencher os 8 lugares humanos. O resto deste arquivo é detalhe extra.
+
+### 1. Preparar uma vez
+
+1. Baixe este repositório, abra o **PowerShell** na pasta e rode:
+
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File .\tools\install.ps1
+   ```
+
+2. Na Steam: botão direito em **Insane 2 > Propriedades > Opções de inicialização** e digite `-dev`.
+
+   ![Opções de inicialização da Steam com -dev](imgs/steam_dev.jpg)
+
+   *Opções de inicialização da Steam com `-dev`, para o console abrir no F11.*
+
+3. Abra o jogo e aperte **F11**. O console deve aparecer.
+
+### 2. Modo online com bots
+
+1. **Multiplayer > Criar servidor**.
+2. No lobby, mude **Bots** de `Forbidden` para **On free slots** (os bots preenchem as vagas vazias).
+3. Escolha mapa, modo e voltas.
+4. O botão **Iniciar** recusa começar sozinho. Abra o console (**F11**) e digite:
+
+   ```lua
+   UI.MpServerLobbyWnd:StartMpGame()
+   ```
+
+5. Vença a corrida. O "Hello!" libera no início da primeira partida.
+
+### 3. Oito players ("Bots are harder")
+
+O jogo conta 8 lugares humanos. Os bots não ocupam esses lugares. Use o servidor sem Steam: o menu da Steam recusa uma segunda cópia na mesma conta.
+
+Se o PC sofrer com 8 cópias, aplique antes as [configurações leves](#desempenho-configurações-leves-para-as-cópias-extras).
+
+1. Abra o Insane 2 **pela Steam** (com `-dev`). Esta é a janela principal.
+2. No menu principal, abra o console (F11) e rode:
+
+   ```lua
+   sys.concmd("exec host_bots.cfg")
+   ```
+
+   ![Console subindo o servidor com bots](imgs/terminal_host_bots.png)
+
+   *Janela principal: `exec host_bots.cfg` sobe o servidor local e abre o lobby.*
+
+3. Abra 7 cópias extras (PowerShell, na pasta do repositório):
+
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File .\tools\start_clients.ps1 -Clients 7
+   ```
+
+4. Em **cada** cópia extra, quando o menu principal aparecer, aperte **F11** e digite:
+
+   ```lua
+   sys.concmd("connect 127.0.0.1")
+   ```
+
+   A cópia entra no lobby e fica **not ready**.
+
+   ![Oito janelas, nenhuma pronta](imgs/all.jpg)
+
+   *Depois do connect, as cópias estão no lobby e ainda not ready.*
+
+5. Em **cada** janela, aperte **Enter** ou **A** para aceitar e ficar **ready**.
+
+   ![Oito players prontos](imgs/all_ready.jpg)
+
+   *Os 8 players marcados como prontos.*
+
+6. Na janela principal, inicie a corrida e **vença**. As 8 cópias precisam estar na corrida (podem ficar paradas no grid).
+
+   ![Corrida começando com oito players](imgs/all_start.jpg)
+
+   *A corrida começa com as oito cópias conectadas.*
+
+7. Ao terminar a corrida, o **"Bots are harder"** aparece como desbloqueado.
+
+   ![Achievement liberado depois da corrida](imgs/achievement_unlocked.jpg)
+
+   *Aviso no jogo: o achievement liberou ao fim da corrida.*
+
+8. Feche as cópias extras com `.\tools\start_clients.ps1 -StopAll` e depois a janela principal. Ao fechar o jogo, a Steam avisa o desbloqueio, e ele passa a aparecer na lista de conquistas.
+
+   ![Aviso da Steam ao fechar o jogo](imgs/achievement_unlocked2.jpg)
+
+   *A Steam avisa o desbloqueio ao fechar o jogo.*
+
+   ![Achievements na página da Steam](imgs/achievements_on_steam.jpg)
+
+   *O achievement na página de conquistas da Steam.*
+
+---
+
 ## Sumário
 
-- [Requisitos](#requisitos)
-- [Instalação](#instalação)
-- [Achievements online](#achievements-online)
-- [Jogar contra bots](#jogar-contra-bots)
-- ["Bots are harder" com 8 cópias](#bots-are-harder-com-8-cópias)
-- [Desempenho: configurações leves para as cópias extras](#desempenho-configurações-leves-para-as-cópias-extras)
-- [Referência de console e comandos](#referência-de-console-e-comandos)
-- [Problemas comuns](#problemas-comuns)
-- [Último recurso (opcional)](#último-recurso-opcional)
-- [Como funciona](#como-funciona)
-- [Aviso](#aviso)
+- [Insane 2 - Servidor local com bots para os achievements online](#insane-2---servidor-local-com-bots-para-os-achievements-online)
+  - [Quick run](#quick-run)
+    - [1. Preparar uma vez](#1-preparar-uma-vez)
+    - [2. Modo online com bots](#2-modo-online-com-bots)
+    - [3. Oito players ("Bots are harder")](#3-oito-players-bots-are-harder)
+  - [Sumário](#sumário)
+  - [Requisitos](#requisitos)
+  - [Instalação](#instalação)
+  - [Achievements online](#achievements-online)
+  - [Jogar contra bots](#jogar-contra-bots)
+  - ["Bots are harder" com 8 cópias](#bots-are-harder-com-8-cópias)
+  - [Desempenho: configurações leves para as cópias extras](#desempenho-configurações-leves-para-as-cópias-extras)
+  - [Referência de console e comandos](#referência-de-console-e-comandos)
+  - [Problemas comuns](#problemas-comuns)
+  - [Último recurso (opcional)](#último-recurso-opcional)
+  - [Como funciona](#como-funciona)
+  - [Aviso](#aviso)
 
 ---
 
@@ -74,12 +178,20 @@ Nenhum arquivo do jogo é alterado ou redistribuído: só arquivos `.cfg` e scri
 
 Hospedar conta: não precisa ser cliente. Detalhes em [docs/achievements.md](docs/achievements.md).
 
+Quando um achievement online libera, o jogo mostra o aviso depois da corrida. A Steam costuma avisar só ao fechar o jogo.
+
+![Achievement liberado depois da corrida](imgs/achievement_unlocked.jpg)
+
+*Aviso no jogo: o achievement liberou depois da corrida.*
+
 ## Jogar contra bots
+
+Os passos curtos estão no [Quick run](#quick-run). Detalhe extra abaixo.
 
 **Opção A - servidor Steam pelo menu (mais simples):**
 
 1. **Multiplayer > Criar servidor**.
-2. No lobby, mude **Bots** de `Forbidden` para **`Allowed`** (os bots preenchem as vagas vazias).
+2. No lobby, mude **Bots** de `Forbidden` para **On free slots** (os bots preenchem as vagas vazias).
 3. Escolha mapa, modo e voltas.
 4. O botão **Iniciar** recusa começar sozinho ("There are no ready players connected...").
    Abra o console (**F11**) e digite:
@@ -96,7 +208,7 @@ Hospedar conta: não precisa ser cliente. Detalhes em [docs/achievements.md](doc
 sys.concmd("exec host_bots.cfg")
 ```
 
-Depois deixe **Bots: Allowed** no lobby e inicie com `sys.concmd("start")`.
+Depois deixe **Bots: On free slots** no lobby e inicie com `sys.concmd("start")`.
 
 **Rota de farm, em palavras simples.** Dois achievements pedem uma vitória em cada modo e uma
 vitória em cada mapa. Fazer isso na mão significa abrir o lobby 20 vezes e mudar as opções.
@@ -121,6 +233,8 @@ rota não carregar, ou um mapa recusar o modo, escolha mapa e modo no lobby e in
 
 ## "Bots are harder" com 8 cópias
 
+Os passos curtos estão no [Quick run](#quick-run). Detalhe extra abaixo.
+
 O jogo conta os 8 lugares humanos (os bots usam lugares separados), então são necessárias 8
 cópias do jogo conectadas. Funciona num PC só e numa conta Steam só, usando o servidor **sem Steam**:
 
@@ -144,10 +258,11 @@ cópias do jogo conectadas. Funciona num PC só e numa conta Steam só, usando o
    sys.concmd("connect 127.0.0.1")
    ```
 
-   e marque a cópia como **pronta** no lobby.
-6. Na janela principal, inicie a corrida e **vença**. As 8 cópias precisam estar na corrida
-   (podem ficar paradas no grid).
-7. Feche as cópias extras com `.\tools\start_clients.ps1 -StopAll` e depois a janela principal.
+   A cópia entra no lobby e fica **not ready**.
+6. Em **cada** janela, aperte **Enter** ou **A** para aceitar e ficar **ready**.
+7. Na janela principal, inicie a corrida e **vença**. As 8 cópias precisam estar na corrida
+   (podem ficar paradas no grid). Ao terminar, o **"Bots are harder"** aparece como desbloqueado.
+8. Feche as cópias extras com `.\tools\start_clients.ps1 -StopAll` e depois a janela principal.
 
 > Não use o servidor Steam do menu para isso: a Steam recusa uma segunda cópia na mesma conta
 > com **"Authorization error"**.
@@ -197,6 +312,12 @@ O console do jogo executa **Lua**. Comandos de console e os atalhos abaixo são 
 | `sys.concmd("stop")` | Para o servidor |
 | `MpStartNetLocator(); sys.concmd("findLanGames")` e depois `MpClientConnect(network.LANGames[1].address)` | Entrar pela busca de rede local em vez do IP |
 
+`sys.concmd("progress")` mostra o que você já tem dos achievements online:
+
+![Progresso online no console](imgs/terminal_progress.png)
+
+*Saída de `progress` no console: vitórias, tempo, modos e mapas já feitos.*
+
 Arquivos instalados em `<Insane2>\data`:
 
 | Arquivo | Para que serve |
@@ -214,7 +335,7 @@ Arquivos instalados em `<Insane2>\data`:
 | F11 não faz nada | Falta `-dev` nas opções de inicialização da Steam |
 | `attempt to call global 'scriptRun' (a nil value)` | O console executa Lua: digite Lua direto ou use `sys.concmd("...")` |
 | "There are no ready players connected to the game except the server" | Os bots não contam para o botão Iniciar: use `UI.MpServerLobbyWnd:StartMpGame()` |
-| O lobby tem "Bots: Forbidden" e nenhuma quantidade de bots | A opção só tem Forbidden/Allowed; `Allowed` preenche todas as vagas vazias |
+| O lobby tem "Bots: Forbidden" e nenhuma quantidade de bots | A opção só tem Forbidden / On free slots; On free slots preenche todas as vagas vazias |
 | Cópia extra: "Authorization error" | Você hospedou pelo menu da Steam. Use `sys.concmd("exec host_bots.cfg")` |
 | Cópia extra não encontra o servidor | A lista de servidores só mostra servidores Steam. Use `sys.concmd("connect 127.0.0.1")` na cópia extra |
 | O connect automático na inicialização não faz nada | O `-concmd` roda antes de a rede estar pronta; conecte à mão pelo menu |

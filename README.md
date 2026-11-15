@@ -122,7 +122,6 @@ If the PC struggles with 8 copies, set the [light settings](#performance-light-s
 - [Performance: light settings for the extra copies](#performance-light-settings-for-the-extra-copies)
 - [Console and command reference](#console-and-command-reference)
 - [Troubleshooting](#troubleshooting)
-- [Optional last resort](#optional-last-resort)
 - [How it works](#how-it-works)
 - [Disclaimer](#disclaimer)
 
@@ -321,7 +320,6 @@ Files installed in `<Insane2>\data`:
 | `farm.cfg` | Shortcuts (aliases) for server, modes, maps and the route |
 | `host_bots.cfg` | Non-Steam server with 7 bots, Offroad Race, 2 laps |
 | `progress.cfg` | Prints the online achievement statistics |
-| `unlock_bots_are_harder.cfg` | Optional last resort (see below) |
 
 ## Troubleshooting
 
@@ -337,21 +335,6 @@ Files installed in `<Insane2>\data`:
 | `.ps1` does nothing when typed in `cmd` | `cmd` does not run PowerShell scripts: use `powershell -ExecutionPolicy Bypass -File ...` |
 | A second copy says "Can not run another copy" | Open extra copies with `start_clients.ps1` (it uses `-multiCopies`) |
 | My resolution/volume got reset | An extra copy was closed last. Close extras first, main window last |
-
-## Optional last resort
-
-If you cannot run 8 copies, `unlock_bots_are_harder.cfg` is meant to unlock **"Bots are harder"**
-the same way the game does when the condition is met:
-
-```lua
-sys.concmd("exec unlock_bots_are_harder.cfg")
-```
-
-**This was not tested in-game.** It should work, because it calls `Profile:UnlockAchievement`,
-the same function the game calls when you earn an achievement, and that function sends the
-unlock to Steam and saves the profile. The original `unlockAchievement` console command does
-**not** work on PC: it is the Xbox 360 path and never reaches Steam. Prefer playing: the
-8-copies method was tested and works.
 
 ## How it works
 

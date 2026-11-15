@@ -127,7 +127,6 @@ Se o PC sofrer com 8 cópias, aplique antes as [configurações leves](#desempen
   - [Desempenho: configurações leves para as cópias extras](#desempenho-configurações-leves-para-as-cópias-extras)
   - [Referência de console e comandos](#referência-de-console-e-comandos)
   - [Problemas comuns](#problemas-comuns)
-  - [Último recurso (opcional)](#último-recurso-opcional)
   - [Como funciona](#como-funciona)
   - [Aviso](#aviso)
 
@@ -326,7 +325,6 @@ Arquivos instalados em `<Insane2>\data`:
 | `farm.cfg` | Atalhos (aliases) de servidor, modos, mapas e rota |
 | `host_bots.cfg` | Servidor sem Steam com 7 bots, Offroad Race, 2 voltas |
 | `progress.cfg` | Mostra as estatísticas dos achievements online |
-| `unlock_bots_are_harder.cfg` | Último recurso opcional (veja abaixo) |
 
 ## Problemas comuns
 
@@ -342,21 +340,6 @@ Arquivos instalados em `<Insane2>\data`:
 | O `.ps1` não faz nada no `cmd` | O `cmd` não executa scripts PowerShell: use `powershell -ExecutionPolicy Bypass -File ...` |
 | A segunda cópia diz "Can not run another copy" | Abra as cópias extras com o `start_clients.ps1` (ele usa `-multiCopies`) |
 | Minha resolução/volume voltou ao baixo | Uma cópia extra foi fechada por último. Feche as extras antes da janela principal |
-
-## Último recurso (opcional)
-
-Se não conseguir rodar 8 cópias, o `unlock_bots_are_harder.cfg` serve para liberar o
-**"Bots are harder"** do mesmo jeito que o jogo faz quando a condição é cumprida:
-
-```lua
-sys.concmd("exec unlock_bots_are_harder.cfg")
-```
-
-**Isso não foi testado no jogo.** Deve funcionar, porque chama `Profile:UnlockAchievement`,
-a mesma função que o jogo chama quando você ganha um achievement, e essa função envia o
-desbloqueio para a Steam e salva o perfil. O comando de console original `unlockAchievement`
-**não** funciona no PC: é o caminho do Xbox 360 e nunca chega à Steam. Prefira jogar: o método
-das 8 cópias foi testado e funciona.
 
 ## Como funciona
 

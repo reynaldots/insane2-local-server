@@ -5,16 +5,9 @@ and the `i2.exe` routines that increment the statistics.
 
 ## How the game grants achievements on PC
 
-1. The C++ code increments profile statistics (`Profile:StatAdd`).
-2. `Profile:OnStatChange` (Lua) checks the condition and calls `Profile:UnlockAchievement("ACHIEV_...")`.
-3. On PC, `UnlockAchievement` calls `Steam_UnlockAchievement(steamId)`.
-
-The console command `unlockAchievement` is the **Xbox 360** path (queue by `xlastId`) and
-**does not send anything to Steam on PC**. The PC equivalent (Lua console) is:
-
-```lua
-Profile:UnlockAchievement("ACHIEV_XXX", true)
-```
+The game increments profile statistics while you play. When a statistic changes, the profile
+script checks that achievement's condition. On PC, a met condition is reported to Steam and
+the profile is saved.
 
 ## Online achievements (confirmed in the code)
 

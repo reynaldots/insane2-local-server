@@ -1,0 +1,17 @@
+# Arquivos gerados a partir do jogo (direitos autorais da Targem Games) - não versionar
+tools/extracted/
+tools/decompiled/
+*.pak
+*.exe
+*.dll
+
+# Ferramentas baixadas sob demanda
+*.jar
+
+# Arquivos de execução local
+tools/instances.pid
+steam_appid.txt
+
+# Python
+__pycache__/
+*.pyc
